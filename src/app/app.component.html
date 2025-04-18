@@ -1,0 +1,216 @@
+<!-- --------------------------------------- add task  -------------------------------------------------------- -->
+
+<!-- Add New Task Button -->
+<button
+  pButton
+  type="button"
+  label="Add New Task"
+  icon="pi pi-plus"
+  (click)="showDialog('add')"
+></button>
+
+<!-- Task Dialog -->
+<p-dialog
+  header="{{ dialogTitle }}"
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '35rem' }"
+  [contentStyle]="{ overflow: 'visible', padding: '1rem 1.5rem' }"
+>
+  <div class="p-fluid">
+    <!-- <span class="p-text-secondary block mb-4">Update your task information.</span> -->
+
+    <!-- Task Title -->
+    <div class="mb-4">
+      <label for="title" class="font-semibold block mb-1">Task Title: </label>
+      <input
+        pInputText
+        id="title"
+        [(ngModel)]="task.title"
+        style="width: 100%; height: 2rem"
+        autocomplete="off"
+      />
+      <small id="username-help"> Enter task title. </small>
+    </div>
+
+    <!-- Description -->
+    <div class="mb-4">
+      <label for="description" class="font-semibold block mb-1"
+        >Description:
+      </label>
+      <input
+        pInputText
+        id="description"
+        [(ngModel)]="task.description"
+        style="width: 100%; height: 2rem"
+        autocomplete="off"
+      />
+      <small id="username-help"> Enter task description. </small>
+    </div>
+
+    <!-- Label Dropdown -->
+    <div class="mb-4">
+      <label for="label" class="font-semibold block mb-2"
+        >Select Category:
+      </label>
+      <p-dropdown
+        id="label"
+        [(ngModel)]="task.label"
+        [options]="labels"
+        optionLabel="name"
+        placeholder="Select a label"
+        class="w-full"
+      ></p-dropdown>
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex justify-content-end gap-2">
+      <p-button
+        label="Cancel"
+        severity="secondary"
+        (onClick)="closeDialog()"
+      ></p-button>
+      <p-button label="Save" (onClick)="addTask()"></p-button>
+    </div>
+  </div>
+</p-dialog>
+
+<!-- --------------------------------------- add task  -------------------------------------------------------- -->
+
+<!-- --------------------------------------- login  -------------------------------------------------------- -->
+<p-button (onClick)="showLoginDialog()" icon="pi pi-user" label="Login" />
+
+<p-dialog
+  [(visible)]="loginVisible"
+  modal
+  [closable]="false"
+  [style]="{ width: '400px' }"
+  contentStyleClass="login-dialog-content"
+  [draggable]="false"
+  [modal]="true"
+>
+  <ng-template pTemplate="headless">
+    <div
+      class="flex flex-column px-6 py-6 gap-5 rounded-3xl"
+      style="
+        background: linear-gradient(to right, #3a1c71, #d76d77, #ffaf7b);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      "
+    >
+      <svg
+        width="40"
+        height="40"
+        class="block mx-auto mb-2"
+        viewBox="0 0 33 35"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <!-- SVG paths remain unchanged -->
+      </svg>
+
+      <!-- <h2 class="text-white text-center font-bold text-xl">Welcome Back</h2> -->
+
+      <div class="flex flex-column gap-2">
+        <label for="username" class="text-white font-medium">Email</label>
+        <input
+          pInputText
+          id="email"
+          [(ngModel)]="email"
+          placeholder="Enter your email"
+          class="bg-white-alpha-20 border-none p-3 text-white rounded-lg placeholder-white"
+        />
+      </div>
+
+      <div class="flex flex-column gap-2">
+        <label for="password" class="text-white font-medium">Password</label>
+        <input
+          pInputText
+          id="password"
+          type="password"
+          [(ngModel)]="password"
+          placeholder="Enter your password"
+          class="bg-white-alpha-20 border-none p-3 text-white rounded-lg placeholder-white"
+        />
+      </div>
+
+      <div class="flex justify-content-between gap-3 mt-2">
+        <p-button
+          label="Sign In"
+          (onClick)="login()"
+          styleClass="w-full font-semibold text-white border-none"
+          [style]="{
+            'background-color': 'rgba(255, 255, 255, 0.2)',
+            'backdrop-filter': 'blur(8px)',
+            'border-radius': '10px',
+            padding: '0.75rem 1rem',
+            transition: 'all 0.3s ease',
+            'box-shadow': '0 4px 12px rgba(0, 0, 0, 0.15)'
+          }"
+        ></p-button>
+
+        <p-button
+          label="Cancel"
+          (onClick)="closeLoginDialog()"
+          styleClass="w-full font-semibold text-white border-none"
+          [style]="{
+            'background-color': 'rgba(255,255,255,0.1)',
+            'backdrop-filter': 'blur(8px)',
+            'border-radius': '10px'
+          }"
+        ></p-button>
+      </div>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<!-- --------------------------------------- login  -------------------------------------------------------- -->
+
+<!-- --------------------------------------- table  -------------------------------------------------------- -->
+
+<!-- Table of Products -->
+<p-table [value]="tasks$ | async" [tableStyle]="{ 'min-width': '50rem' }">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Created At</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-task>
+      <tr>
+        <td>{{ task.title }}</td>
+        <td>{{ task.description }}</td>
+        <td>{{ task.createdAt | date : "medium" }}</td>
+        <td>
+          <p-tag
+            [value]="task.status"
+            [severity]="getSeverity(task.status)"
+          ></p-tag>
+        </td>
+        <td>
+          <button
+            pButton
+            icon="pi pi-pencil"
+            class="p-button-sm p-button-rounded p-button-text"
+            (click)="editTask(task)"
+            tooltip="Edit"
+          >
+            Edit
+          </button>
+          <button
+            pButton
+            icon="pi pi-trash"
+            class="p-button-sm p-button-rounded p-button-text p-button-danger"
+            (click)="deleteTask(task?._id)"
+            tooltip="Delete"
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  
+<!-- --------------------------------------- login  -------------------------------------------------------- -->
