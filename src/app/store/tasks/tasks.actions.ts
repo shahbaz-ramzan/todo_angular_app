@@ -24,3 +24,33 @@ export const deleteTaskFailure = createAction(
   '[Tasks] Delete Task Failure',
   props<{ error: any }>()
 );
+
+export const createTask = createAction(
+  '[Tasks] Create Task',
+  props<{ task: any }>()
+);
+
+export const createTaskSuccess = createAction(
+  '[Tasks] Create Task Success',
+  props<{ task: any }>()
+);
+
+export const createTaskFailure = createAction(  
+  '[Tasks] Create Task Failure',
+  props<{ error: any }>()
+);
+
+export const updateTask = createAction(
+  '[Tasks] Update Task',
+  props<{ task: any }>()
+);
+
+export const updateTaskSuccess = createAction(
+  '[Tasks] Update Task Success',
+  props<{ task: any }>()
+);
+
+export const updateTaskFailure = createAction(
+  '[Tasks] Update Task Failure',
+  props<{ error: any }>()
+);

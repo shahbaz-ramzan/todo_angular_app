@@ -51,7 +51,7 @@
     <!-- Label Dropdown -->
     <div class="mb-4">
       <label for="label" class="font-semibold block mb-2"
-        >Select Category:
+        >Select Status:
       </label>
       <p-dropdown
         id="label"
@@ -70,7 +70,7 @@
         severity="secondary"
         (onClick)="closeDialog()"
       ></p-button>
-      <p-button label="Save" (onClick)="addTask()"></p-button>
+      <p-button label="{{ btnText }}" (onClick)="addTask()"></p-button>
     </div>
   </div>
 </p-dialog>

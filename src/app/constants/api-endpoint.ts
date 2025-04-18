@@ -8,8 +8,8 @@ export const AUTH_ENDPOINTS = {
 export const TASK_ENDPOINTS = {
   CREATE: `${BASE_URL}/task/create`,
   GET_ALL: `${BASE_URL}/task/list`,
-  GET_BY_ID: (id: string) => `${BASE_URL}/task/edit`,
-  UPDATE: (id: string) => `${BASE_URL}/task/update`,
+  GET_BY_ID: (id: string) => `${BASE_URL}/task/edit/${id}`,
+  UPDATE: (id: string) => `${BASE_URL}/task/update/${id}`,
   DELETE: (id: string) => `${BASE_URL}/task/remove/${id}`,
 };
 
