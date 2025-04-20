@@ -39,5 +39,13 @@ export const tasksReducer = createReducer(
   on(tasksActions.deleteTaskFailure, (state, { error }) => ({
     ...state,
     error,
+  })),
+  on(tasksActions.createTaskSuccess, (state, { task }) => ({
+    ...state,
+    tasks: [...state.tasks, task],
+  })),
+  on(tasksActions.createTaskFailure, (state, { error }) => ({
+    ...state,
+    error,
   }))
 );

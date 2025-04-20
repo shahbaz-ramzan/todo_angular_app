@@ -7,7 +7,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { RatingModule } from 'primeng/rating';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
-import { deleteTask, loadTasks } from './store/tasks/tasks.actions';
+import { createTask, deleteTask, loadTasks, updateTask } from './store/tasks/tasks.actions';
 // import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { loginAction } from './store/auth/auth.actions';
@@ -29,7 +29,9 @@ import { loginAction } from './store/auth/auth.actions';
   styleUrl: './app.component.css',
 })
 export class AppComponent implements OnInit {
-  dialogTitle = '';
+  taskId: string = '';
+  dialogTitle : string = '';
+  btnText :string = '';
   email: string = '';
   password: string = '';
   store = inject(Store);
@@ -43,7 +45,9 @@ export class AppComponent implements OnInit {
   }
 
   login() {
-    this.store.dispatch(loginAction({ user: { email: this.email, password: this.password } }));
+    this.store.dispatch(
+      loginAction({ user: { email: this.email, password: this.password } })
+    );
     this.store.dispatch(loadTasks());
     this.loginVisible = false;
   }
@@ -54,20 +58,23 @@ export class AppComponent implements OnInit {
   task = {
     title: '',
     description: '',
-    label: null,
+    label: { name: '', code: '' },
   };
 
   labels = [
-    { name: 'Work', code: 'WORK' },
-    { name: 'Personal', code: 'PERSONAL' },
-    { name: 'Urgent', code: 'URGENT' },
+    { name: 'To Do', code: 'todo' },
+    { name: 'In Progress', code: 'inProgress' },
+    { name: 'Completed', code: 'completed' },
   ];
 
   showDialog(arg: any) {
+    this.resetForm();
     if (arg === 'add') {
       this.dialogTitle = 'Add New Task';
+      this.btnText = 'Save';
     } else {
       this.dialogTitle = 'Edit Task';
+      this.btnText = 'Update';
     }
     this.visible = true;
   }
@@ -78,15 +85,27 @@ export class AppComponent implements OnInit {
   }
 
   addTask() {
-    console.log('Task to add:', this.task);
+    const payload = {
+      title: this.task.title,
+      description: this.task.description,
+      status: this.task.label?.code,
+    };
+  
+    if (this.btnText === 'Save') {
+      this.store.dispatch(createTask({ task: payload }));
+    } else {
+      this.store.dispatch(updateTask({ task: { ...payload, id: this.taskId } }));
+    }
+  
     this.closeDialog();
   }
+  
 
   resetForm() {
     this.task = {
       title: '',
       description: '',
-      label: null,
+      label: { name: '', code: '' },
     };
   }
   getSeverity(
@@ -105,8 +124,19 @@ export class AppComponent implements OnInit {
   }
   editTask(task: any) {
     this.showDialog('edit');
-    console.log('Editing task:', task);
+    const labelObj = this.labels.find(
+      (label) => label.code === task.status
+    ) || { name: '', code: '' };
+    this.taskId = task._id;
+    this.task = {
+      title: task.title,
+      description: task.description,
+      label: labelObj,
+    };
+
+    console.log('Editing task:', this.task);
   }
+
   deleteTask(id: string) {
     this.store.dispatch(deleteTask({ id: id }));
   }
@@ -116,5 +146,4 @@ export class AppComponent implements OnInit {
   showLoginDialog() {
     this.loginVisible = true;
   }
-
 }
