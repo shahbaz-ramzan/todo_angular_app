@@ -168,7 +168,7 @@ header="Create an Account"
   (onClick)="showLoginDialog()"
   icon="pi pi-user"
   label="Login"
-  *ngIf="!isAuthenticated"
+  *ngIf="!isValidUser"
 />
 
 <!-- Login Dialog -->
@@ -231,7 +231,7 @@ header="Create an Account"
   icon="pi pi-sign-out"
   class="p-button-danger"
   (onClick)="logout()"
-  *ngIf="(isAuthenticated)"
+  *ngIf="isValidUser"
 
 >
 </p-button>

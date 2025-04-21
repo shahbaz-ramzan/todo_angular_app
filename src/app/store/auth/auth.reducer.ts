@@ -7,6 +7,8 @@ export interface AuthState {
   message: string | null;
   error: any;
   isAuthenticated: boolean;
+  isValidUser: boolean;
+
 }
 
 export const initialState: AuthState = {
@@ -14,6 +16,8 @@ export const initialState: AuthState = {
   message: null,
   error: null,
   isAuthenticated: false,
+  isValidUser: false
+
 };
 
 export const authReducer = createReducer(
@@ -24,6 +28,8 @@ export const authReducer = createReducer(
     message,
     error: null,
     isAuthenticated: true,
+    isValidUser: true
+
   })),
   on(AuthActions.loginFailure, (state, { error }) => ({
     ...state,
@@ -31,6 +37,8 @@ export const authReducer = createReducer(
     token: null,
     message: null,
     isAuthenticated: false,
+    isValidUser: false
+
   })),
   on(AuthActions.logout, (state) => ({
     ...state,
@@ -38,5 +46,6 @@ export const authReducer = createReducer(
     message: null,
     error: null,
     isAuthenticated: false,
+    isValidUser: false
   }))
 );

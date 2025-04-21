@@ -15,7 +15,7 @@ import {
 } from './store/tasks/tasks.actions';
 // import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { loginAction, logout, registerAction } from './store/auth/auth.actions';
+import { checkAuthFromCookie, loginAction, logout, registerAction } from './store/auth/auth.actions';
 import { CookieService } from 'ngx-cookie-service';
 
 @Component({
@@ -45,13 +45,12 @@ export class AppComponent implements OnInit {
   user$ = this.store.select((state: any) => state.user) || [];
   // token$ = this.store.select((state: any) => state.auth.token) || [];
   isAuthenticated = false;
+  isValidUser = false;
+
 
   constructor(private cookieService: CookieService) {}
 
-  logout() {
-    this.cookieService.delete('authToken');
-    this.store.dispatch(logout());
-  }
+ 
 
   ngOnInit(): void {
     const token = this.cookieService.get('authToken');
@@ -67,15 +66,41 @@ export class AppComponent implements OnInit {
       .subscribe((authState) => {
         console.log('Latest auth state:', authState?.isAuthenticated);
       });
+      this.store.dispatch(checkAuthFromCookie());
+
+      // Listen to the auth state and set isValidUser accordingly
+      this.store.select((state: any) => state.auth).subscribe((authState) => {
+        this.isValidUser = authState.isValidUser;
+      });
+  
   }
 
+  // login() {
+  //   this.store.dispatch(
+  //     loginAction({ user: { email: this.email, password: this.password } })
+  //   );
+  //   // this.store.dispatch(loadTasks());
+  //   this.loginVisible = false;
+  //   this.isAuthenticated = true;
+  // }
+  // logout() {
+  //   this.cookieService.delete('authToken');
+  //   this.store.dispatch(logout());
+  //   this.isAuthenticated = false;
+  // }
   login() {
     this.store.dispatch(
       loginAction({ user: { email: this.email, password: this.password } })
     );
-    this.store.dispatch(loadTasks());
     this.loginVisible = false;
   }
+
+  logout() {
+    this.cookieService.delete('authToken');
+    this.store.dispatch(logout());
+  }
+
+
 
   visible: boolean = false;
   loginVisible: boolean = false;
@@ -173,14 +198,14 @@ export class AppComponent implements OnInit {
     this.loginVisible = true;
   }
 
-  // -----------------------------------------------------------
+  // -----------------------------------------------------------signup --------------------------------------------------
   signupVisible = false;
 
   signupData = {
     username: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
   };
 
   showSignupDialog() {
@@ -189,7 +214,13 @@ export class AppComponent implements OnInit {
 
   isSignupFormValid() {
     const { username, email, password, confirmPassword } = this.signupData;
-    return username && email && password && confirmPassword && password === confirmPassword;
+    return (
+      username &&
+      email &&
+      password &&
+      confirmPassword &&
+      password === confirmPassword
+    );
   }
 
   signup() {
@@ -197,10 +228,8 @@ export class AppComponent implements OnInit {
       alert('Please fill all fields correctly.');
       return;
     }
-this.store.dispatch(registerAction({ user: this.signupData }));
+    this.store.dispatch(registerAction({ user: this.signupData }));
     console.log('Sign Up Data:', this.signupData);
-
-    // TODO: Call your signup service here
     this.signupVisible = false;
   }
 }

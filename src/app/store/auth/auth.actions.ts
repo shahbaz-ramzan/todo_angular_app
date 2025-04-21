@@ -29,3 +29,10 @@ export const registerFailure = createAction(
   '[Auth] Register Failure',
   props<{ error: any }>()
 );  
+
+// auth.actions.ts
+export const checkAuthFromCookie = createAction('[Auth] Check Auth From Cookie');
+export const checkAuthSuccess = createAction(
+  '[Auth] Check Auth Success',
+  props<{ token: string }>()
+);
