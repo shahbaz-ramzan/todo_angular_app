@@ -7,10 +7,16 @@ import { DropdownModule } from 'primeng/dropdown';
 import { RatingModule } from 'primeng/rating';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
-import { createTask, deleteTask, loadTasks, updateTask } from './store/tasks/tasks.actions';
+import {
+  createTask,
+  deleteTask,
+  loadTasks,
+  updateTask,
+} from './store/tasks/tasks.actions';
 // import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { loginAction } from './store/auth/auth.actions';
+import { loginAction, logout, registerAction } from './store/auth/auth.actions';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-root',
@@ -30,18 +36,37 @@ import { loginAction } from './store/auth/auth.actions';
 })
 export class AppComponent implements OnInit {
   taskId: string = '';
-  dialogTitle : string = '';
-  btnText :string = '';
+  dialogTitle: string = '';
+  btnText: string = '';
   email: string = '';
   password: string = '';
   store = inject(Store);
   tasks$ = this.store.select((state: any) => state.tasks.tasks) || [];
   user$ = this.store.select((state: any) => state.user) || [];
+  // token$ = this.store.select((state: any) => state.auth.token) || [];
+  isAuthenticated = false;
 
-  constructor() {}
+  constructor(private cookieService: CookieService) {}
+
+  logout() {
+    this.cookieService.delete('authToken');
+    this.store.dispatch(logout());
+  }
+
   ngOnInit(): void {
+    const token = this.cookieService.get('authToken');
+    console.log('Token:', token);
+    if (token) {
+      this.isAuthenticated = true;
+    } else {
+      this.isAuthenticated = false;
+    }
     this.store.dispatch(loadTasks());
-    console.log(this.tasks$);
+    this.store
+      .select((state: any) => state.auth)
+      .subscribe((authState) => {
+        console.log('Latest auth state:', authState?.isAuthenticated);
+      });
   }
 
   login() {
@@ -90,16 +115,17 @@ export class AppComponent implements OnInit {
       description: this.task.description,
       status: this.task.label?.code,
     };
-  
+
     if (this.btnText === 'Save') {
       this.store.dispatch(createTask({ task: payload }));
     } else {
-      this.store.dispatch(updateTask({ task: { ...payload, id: this.taskId } }));
+      this.store.dispatch(
+        updateTask({ task: { ...payload, id: this.taskId } })
+      );
     }
-  
+
     this.closeDialog();
   }
-  
 
   resetForm() {
     this.task = {
@@ -145,5 +171,36 @@ export class AppComponent implements OnInit {
   }
   showLoginDialog() {
     this.loginVisible = true;
+  }
+
+  // -----------------------------------------------------------
+  signupVisible = false;
+
+  signupData = {
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  };
+
+  showSignupDialog() {
+    this.signupVisible = true;
+  }
+
+  isSignupFormValid() {
+    const { username, email, password, confirmPassword } = this.signupData;
+    return username && email && password && confirmPassword && password === confirmPassword;
+  }
+
+  signup() {
+    if (!this.isSignupFormValid()) {
+      alert('Please fill all fields correctly.');
+      return;
+    }
+this.store.dispatch(registerAction({ user: this.signupData }));
+    console.log('Sign Up Data:', this.signupData);
+
+    // TODO: Call your signup service here
+    this.signupVisible = false;
   }
 }

@@ -31,5 +31,22 @@ export class AuthEffects {
           )
         )
       );
+
+      registerAction$ = createEffect(() =>
+        this.actions$.pipe(
+          ofType(AuthActions.registerAction),
+          mergeMap(({ user }) =>
+            this.http.post<any>(AUTH_ENDPOINTS.REGISTER, user).pipe(
+              map((response) => {
+                this.cookieService.set('authToken', response.token); // Store token in cookie
+                return AuthActions.registerSuccess({
+                  message: response.message,
+                });
+              }),
+              catchError((error) => of(AuthActions.registerFailure({ error })))
+            )
+          )
+        )
+      );
       
 }
