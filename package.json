@@ -7,7 +7,7 @@
   "build": "ng build",
   "watch": "ng build --watch --configuration development",
   "test": "ng test",
-  "serve:dist": "http-server dist/todo_with_angular/browser -p 8080 --spa"
+  "serve:dist":"http-server dist/todo_with_angular/browser -p 8080 --host 0.0.0.0 --spa"
 },
   "private": true,
   "dependencies": {

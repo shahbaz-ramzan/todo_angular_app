@@ -17,14 +17,18 @@ export class TasksEffects {
   loadTasks$ = createEffect(() =>
     this.actions$.pipe(
       ofType(TasksActions.loadTasks),
-      mergeMap(() =>
-        this.http.get(TASK_ENDPOINTS.GET_ALL).pipe(
+      mergeMap(() => {
+        const token = this.cookieService.get('authToken');
+        const headers = { Authorization: `Bearer ${token}` };
+  
+        return this.http.get(TASK_ENDPOINTS.GET_ALL, { headers }).pipe(
           map((res: any) => TasksActions.loadTasksSuccess({ tasks: res.data })),
           catchError((error) => of(TasksActions.loadTasksFailure({ error })))
-        )
-      )
+        );
+      })
     )
   );
+  
 
   deleteTask$ = createEffect(() =>
     this.actions$.pipe(

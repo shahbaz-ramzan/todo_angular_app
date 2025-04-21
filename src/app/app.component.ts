@@ -92,6 +92,7 @@ export class AppComponent implements OnInit {
     this.store.dispatch(
       loginAction({ user: { email: this.email, password: this.password } })
     );
+    this.store.dispatch(loadTasks());
     this.loginVisible = false;
   }
 
