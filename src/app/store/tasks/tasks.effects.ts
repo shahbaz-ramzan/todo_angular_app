@@ -5,6 +5,7 @@ import { catchError, map, mergeMap, of } from 'rxjs';
 import * as TasksActions from './tasks.actions';
 import { TASK_ENDPOINTS } from '../../constants/api-endpoint';
 import { CookieService } from 'ngx-cookie-service';
+import * as AuthActions from '../auth/auth.actions';
 
 @Injectable()
 export class TasksEffects {
@@ -20,7 +21,7 @@ export class TasksEffects {
       mergeMap(() => {
         const token = this.cookieService.get('authToken');
         const headers = { Authorization: `Bearer ${token}` };
-  
+
         return this.http.get(TASK_ENDPOINTS.GET_ALL, { headers }).pipe(
           map((res: any) => TasksActions.loadTasksSuccess({ tasks: res.data })),
           catchError((error) => of(TasksActions.loadTasksFailure({ error })))
@@ -28,7 +29,6 @@ export class TasksEffects {
       })
     )
   );
-  
 
   deleteTask$ = createEffect(() =>
     this.actions$.pipe(
@@ -79,10 +79,12 @@ export class TasksEffects {
       mergeMap(({ task }) => {
         const token = this.cookieService.get('authToken');
         const headers = { Authorization: `Bearer ${token}` };
-        return this.http.put(TASK_ENDPOINTS.UPDATE(task.id), task, { headers }).pipe(
-          map(() => TasksActions.updateTaskSuccess(task)),
-          catchError((error) => of(TasksActions.updateTaskFailure({ error })))
-        );
+        return this.http
+          .put(TASK_ENDPOINTS.UPDATE(task.id), task, { headers })
+          .pipe(
+            map(() => TasksActions.updateTaskSuccess(task)),
+            catchError((error) => of(TasksActions.updateTaskFailure({ error })))
+          );
       })
     )
   );
@@ -90,6 +92,12 @@ export class TasksEffects {
   reloadTasksAfterUpdatge$ = createEffect(() =>
     this.actions$.pipe(
       ofType(TasksActions.updateTaskSuccess),
+      map(() => TasksActions.loadTasks())
+    )
+  );
+  loadTasksAfterLogin$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.loginSuccess),
       map(() => TasksActions.loadTasks())
     )
   );
