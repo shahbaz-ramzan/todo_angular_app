@@ -7,10 +7,18 @@ import { DropdownModule } from 'primeng/dropdown';
 import { RatingModule } from 'primeng/rating';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
-import { createTask, deleteTask, loadTasks, updateTask } from './store/tasks/tasks.actions';
-// import { Observable } from 'rxjs';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
+import {
+  createTask,
+  deleteTask,
+  loadTasks,
+  updateTask,
+} from './store/tasks/tasks.actions';
 import { Store } from '@ngrx/store';
-import { loginAction } from './store/auth/auth.actions';
+import { checkAuthFromCookie, loginAction, logout, registerAction } from './store/auth/auth.actions';
+import { CookieService } from 'ngx-cookie-service';
+import { HeaderComponent } from './components/header/header.component';
 
 @Component({
   selector: 'app-root',
@@ -24,58 +32,93 @@ import { loginAction } from './store/auth/auth.actions';
     ButtonModule,
     DropdownModule,
     DialogModule,
+    ConfirmDialogModule,
+    HeaderComponent,
   ],
+  providers: [ConfirmationService],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
 export class AppComponent implements OnInit {
-  taskId: string = '';
-  dialogTitle : string = '';
-  btnText :string = '';
+  // Authentication-related properties
   email: string = '';
   password: string = '';
-  store = inject(Store);
-  tasks$ = this.store.select((state: any) => state.tasks.tasks) || [];
-  user$ = this.store.select((state: any) => state.user) || [];
+  isAuthenticated = false;
+  isValidUser = false;
 
-  constructor() {}
-  ngOnInit(): void {
-    this.store.dispatch(loadTasks());
-    console.log(this.tasks$);
-  }
-
-  login() {
-    this.store.dispatch(
-      loginAction({ user: { email: this.email, password: this.password } })
-    );
-    this.store.dispatch(loadTasks());
-    this.loginVisible = false;
-  }
-
+  // Dialog-related properties
   visible: boolean = false;
   loginVisible: boolean = false;
+  signupVisible = false;
 
-  task = {
-    title: '',
-    description: '',
-    label: { name: '', code: '' },
-  };
-
+  // Task-related properties
+  taskId: string = '';
+  dialogTitle: string = '';
+  btnText: string = '';
+  task = { title: '', description: '', label: { name: '', code: '' } };
   labels = [
     { name: 'To Do', code: 'todo' },
     { name: 'In Progress', code: 'inProgress' },
     { name: 'Completed', code: 'completed' },
   ];
 
-  showDialog(arg: any) {
-    this.resetForm();
-    if (arg === 'add') {
-      this.dialogTitle = 'Add New Task';
-      this.btnText = 'Save';
-    } else {
-      this.dialogTitle = 'Edit Task';
-      this.btnText = 'Update';
+  // Signup-related properties
+  signupData = {
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  };
+
+  // Store and observables
+  store = inject(Store);
+  confirmationService = inject(ConfirmationService);
+  tasks$ = this.store.select((state: any) => state.tasks.tasks) || [];
+  user$ = this.store.select((state: any) => state.user) || [];
+
+  constructor(private cookieService: CookieService) {}
+
+  ngOnInit(): void {
+    this.initializeAuthState();
+    this.store.dispatch(loadTasks());
+  }
+
+  // Authentication methods
+  initializeAuthState() {
+    const token = this.cookieService.get('authToken');
+    this.isAuthenticated = !!token;
+
+    this.store.select((state: any) => state.auth).subscribe((authState) => {
+      this.isValidUser = authState.isValidUser;
+      console.log('Latest auth state:', authState?.isAuthenticated);
+    });
+
+    this.store.dispatch(checkAuthFromCookie());
+  }
+
+  login() {
+    if (!this.email || !this.password) {
+      alert('Please enter email and password.');
+      return;
     }
+    this.store.dispatch(
+      loginAction({ user: { email: this.email, password: this.password } })
+    );
+    // this.store.dispatch(loadTasks());
+    this.loginVisible = false;
+  }
+
+  logout() {
+    this.cookieService.delete('authToken');
+    this.store.dispatch(logout());
+    this.isAuthenticated = false;
+  }
+
+  // Task-related methods
+  showDialog(arg: 'add' | 'edit') {
+    this.resetForm();
+    this.dialogTitle = arg === 'add' ? 'Add New Task' : 'Edit Task';
+    this.btnText = arg === 'add' ? 'Save' : 'Update';
     this.visible = true;
   }
 
@@ -90,24 +133,46 @@ export class AppComponent implements OnInit {
       description: this.task.description,
       status: this.task.label?.code,
     };
-  
+
     if (this.btnText === 'Save') {
       this.store.dispatch(createTask({ task: payload }));
     } else {
-      this.store.dispatch(updateTask({ task: { ...payload, id: this.taskId } }));
+      this.store.dispatch(
+        updateTask({ task: { ...payload, id: this.taskId } })
+      );
     }
-  
+
     this.closeDialog();
   }
-  
 
-  resetForm() {
+  editTask(task: any) {
+    this.showDialog('edit');
+    const labelObj = this.labels.find(
+      (label) => label.code === task.status
+    ) || { name: '', code: '' };
+    this.taskId = task._id;
     this.task = {
-      title: '',
-      description: '',
-      label: { name: '', code: '' },
+      title: task.title,
+      description: task.description,
+      label: labelObj,
     };
   }
+
+  confirmDelete(taskId: string) {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this task?',
+      header: 'Confirm Deletion',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.store.dispatch(deleteTask({ id: taskId }));
+      },
+    });
+  }
+
+  resetForm() {
+    this.task = { title: '', description: '', label: { name: '', code: '' } };
+  }
+
   getSeverity(
     status: string
   ): 'success' | 'secondary' | 'info' | 'warning' | 'danger' | 'contrast' {
@@ -122,28 +187,38 @@ export class AppComponent implements OnInit {
         return 'secondary';
     }
   }
-  editTask(task: any) {
-    this.showDialog('edit');
-    const labelObj = this.labels.find(
-      (label) => label.code === task.status
-    ) || { name: '', code: '' };
-    this.taskId = task._id;
-    this.task = {
-      title: task.title,
-      description: task.description,
-      label: labelObj,
-    };
 
-    console.log('Editing task:', this.task);
-  }
-
-  deleteTask(id: string) {
-    this.store.dispatch(deleteTask({ id: id }));
-  }
+  // Dialog methods
   closeLoginDialog() {
     this.loginVisible = false;
   }
+
   showLoginDialog() {
     this.loginVisible = true;
+  }
+
+  showSignupDialog() {
+    this.signupVisible = true;
+  }
+
+  // Signup methods
+  isSignupFormValid() {
+    const { username, email, password, confirmPassword } = this.signupData;
+    return (
+      username &&
+      email &&
+      password &&
+      confirmPassword &&
+      password === confirmPassword
+    );
+  }
+
+  signup() {
+    if (!this.isSignupFormValid()) {
+      alert('Please fill all fields correctly.');
+      return;
+    }
+    this.store.dispatch(registerAction({ user: this.signupData }));
+    this.signupVisible = false;
   }
 }
