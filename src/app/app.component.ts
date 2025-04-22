@@ -7,6 +7,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { RatingModule } from 'primeng/rating';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 import {
   createTask,
   deleteTask,
@@ -16,6 +18,7 @@ import {
 import { Store } from '@ngrx/store';
 import { checkAuthFromCookie, loginAction, logout, registerAction } from './store/auth/auth.actions';
 import { CookieService } from 'ngx-cookie-service';
+import { HeaderComponent } from './components/header/header.component';
 
 @Component({
   selector: 'app-root',
@@ -29,7 +32,10 @@ import { CookieService } from 'ngx-cookie-service';
     ButtonModule,
     DropdownModule,
     DialogModule,
+    ConfirmDialogModule,
+    HeaderComponent,
   ],
+  providers: [ConfirmationService],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
@@ -66,6 +72,7 @@ export class AppComponent implements OnInit {
 
   // Store and observables
   store = inject(Store);
+  confirmationService = inject(ConfirmationService);
   tasks$ = this.store.select((state: any) => state.tasks.tasks) || [];
   user$ = this.store.select((state: any) => state.user) || [];
 
@@ -151,10 +158,15 @@ export class AppComponent implements OnInit {
     };
   }
 
-  deleteTask(id: string) {
-    if (confirm('Are you sure you want to delete this task?')) {
-      this.store.dispatch(deleteTask({ id }));
-    }
+  confirmDelete(taskId: string) {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this task?',
+      header: 'Confirm Deletion',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.store.dispatch(deleteTask({ id: taskId }));
+      },
+    });
   }
 
   resetForm() {

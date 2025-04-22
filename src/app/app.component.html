@@ -1,25 +1,55 @@
-<!-- --------------------------------------- add task  -------------------------------------------------------- -->
+<app-header></app-header>
 
-<!-- Add New Task Button -->
-<button
-  pButton
-  type="button"
-  label="Add New Task"
-  icon="pi pi-plus"
-  (click)="showDialog('add')"
-></button>
+<!-- --------------------------------------- buttons container -------------------------------------------------------- -->
+
+<div class="button-container">
+  <!-- Add Task Button -->
+  <button
+    pButton
+    type="button"
+    label="Add New Task"
+    icon="pi pi-plus"
+    (click)="showDialog('add')"
+  ></button>
+
+  <!-- Sign Up Button -->
+  <p-button
+    label="Sign Up"
+    icon="pi pi-user-plus"
+    (onClick)="showSignupDialog()"
+  ></p-button>
+
+  <!-- Login Button -->
+  <p-button
+    (onClick)="showLoginDialog()"
+    icon="pi pi-user"
+    label="Login"
+    *ngIf="!isValidUser"
+  ></p-button>
+
+  <!-- Logout Button -->
+  <p-button
+    label="Logout"
+    icon="pi pi-sign-out"
+    class="p-button-danger"
+    (onClick)="logout()"
+    *ngIf="isValidUser"
+  ></p-button>
+</div>
+
+<!-- --------------------------------------- buttons container -------------------------------------------------------- -->
+
+<!-- --------------------------------------- add task  -------------------------------------------------------- -->
 
 <!-- Task Dialog -->
 <p-dialog
   header="{{ dialogTitle }}"
   [(visible)]="visible"
   [modal]="true"
-  [style]="{ width: '35rem' }"
-  [contentStyle]="{ overflow: 'visible', padding: '1rem 1.5rem' }"
+  [styleClass]="'dialog-style'"
 >
   <div class="p-fluid">
-    <!-- <span class="p-text-secondary block mb-4">Update your task information.</span> -->
-
+    <div class="dialog-header">Task Details</div>
     <!-- Task Title -->
     <div class="mb-4">
       <label for="title" class="font-semibold block mb-1">Task Title: </label>
@@ -60,11 +90,12 @@
         optionLabel="name"
         placeholder="Select a label"
         class="w-full"
+        [appendTo]="'body'"
       ></p-dropdown>
     </div>
 
     <!-- Buttons -->
-    <div class="flex justify-content-end gap-2">
+    <div class="dialog-footer">
       <p-button
         label="Cancel"
         severity="secondary"
@@ -79,24 +110,15 @@
 
 <!-- --------------------------------------- sign up -------------------------------------------------------- -->
 
- <!-- Sign Up Button -->
-<p-button 
-label="Sign Up" 
-icon="pi pi-user-plus" 
-(onClick)="showSignupDialog()" 
-></p-button>
-
 <!-- Signup Dialog -->
 <p-dialog 
 [(visible)]="signupVisible" 
-modal 
-[style]="{ width: '400px' }"
-header="Create an Account"
-[draggable]="false"
-[closable]="false"
 [modal]="true"
+[styleClass]="'dialog-style'"
+header="Create an Account"
 >
 <div class="p-fluid">
+  <div class="dialog-header">Sign Up</div>
   <!-- Username -->
   <div class="mb-3">
     <label for="username">Username</label>
@@ -145,7 +167,7 @@ header="Create an Account"
   </div>
 
   <!-- Buttons -->
-  <div class="flex justify-content-end gap-2 mt-4">
+  <div class="dialog-footer">
     <p-button 
       label="Cancel" 
       severity="secondary" 
@@ -163,25 +185,16 @@ header="Create an Account"
 <!-- --------------------------------------- sign up -------------------------------------------------------- -->
 
 <!-- --------------------------------------- login  -------------------------------------------------------- -->
-<!-- Login Button -->
-<p-button
-  (onClick)="showLoginDialog()"
-  icon="pi pi-user"
-  label="Login"
-  *ngIf="!isValidUser"
-/>
 
 <!-- Login Dialog -->
 <p-dialog
   [(visible)]="loginVisible"
-  modal
-  [closable]="false"
-  [style]="{ width: '400px' }"
-  [draggable]="false"
   [modal]="true"
+  [styleClass]="'dialog-style'"
   header="Welcome Back"
 >
   <div class="p-fluid">
+    <div class="dialog-header">Login</div>
     <!-- Email -->
     <div class="mb-3">
       <label for="email">Email</label>
@@ -207,7 +220,7 @@ header="Create an Account"
     </div>
 
     <!-- Buttons -->
-    <div class="flex justify-content-end gap-2 mt-4">
+    <div class="dialog-footer">
       <p-button
         label="Cancel"
         severity="secondary"
@@ -224,21 +237,10 @@ header="Create an Account"
 
 <!-- --------------------------------------- login  -------------------------------------------------------- -->
 
-<!-- --------------------------------------- logout  -------------------------------------------------------- -->
-
-<p-button
-  label="Logout"
-  icon="pi pi-sign-out"
-  class="p-button-danger"
-  (onClick)="logout()"
-  *ngIf="isValidUser"
-
->
-</p-button>
-
-<!-- --------------------------------------- logout  -------------------------------------------------------- -->
-
 <!-- --------------------------------------- table  -------------------------------------------------------- -->
+
+<!-- Confirmation Dialog -->
+<p-confirmDialog></p-confirmDialog>
 
 <!-- Table of Products -->
 <p-table [value]="tasks$ | async" [tableStyle]="{ 'min-width': '50rem' }">
@@ -276,7 +278,7 @@ header="Create an Account"
           pButton
           icon="pi pi-trash"
           class="p-button-sm p-button-rounded p-button-text p-button-danger"
-          (click)="deleteTask(task?._id)"
+          (click)="confirmDelete(task?._id)"
           tooltip="Delete"
         >
           Delete
@@ -286,4 +288,4 @@ header="Create an Account"
   </ng-template>
 </p-table>
 
-<!-- --------------------------------------- login  -------------------------------------------------------- -->
+<!-- --------------------------------------- table  -------------------------------------------------------- -->

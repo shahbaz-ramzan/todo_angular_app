@@ -5,14 +5,14 @@ import {
   DomHandler
 } from "./chunk-PAWHH336.js";
 import {
-  NG_VALUE_ACCESSOR
-} from "./chunk-DJAXFXFY.js";
-import {
   PrimeNGConfig,
   PrimeTemplate,
   SharedModule,
   UniqueComponentId
 } from "./chunk-MW6N3XTI.js";
+import {
+  NG_VALUE_ACCESSOR
+} from "./chunk-DJAXFXFY.js";
 import {
   CommonModule,
   NgClass,
