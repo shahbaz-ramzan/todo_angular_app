@@ -15,6 +15,11 @@ export const loginFailure = createAction(
 
 export const logout = createAction('[Auth] Logout');
 
+export const logoutSuccess = createAction(
+  '[Auth] Logout Success',
+  props<{ message: string }>()
+);
+
 export const registerAction = createAction(
   '[Auth] Register',
   props<{ user: any }>()

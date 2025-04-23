@@ -1,5 +1,7 @@
 import { createAction,props } from "@ngrx/store";
 
+export const clearTasks = createAction('[Tasks] Clear Tasks');
+
 export const loadTasks = createAction('[Tasks] Load Tasks');
 export const loadTasksSuccess = createAction(
     '[Tasks] Load Tasks Success',

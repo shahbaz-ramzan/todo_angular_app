@@ -10,13 +10,19 @@ import { TagModule } from 'primeng/tag';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import {
+  clearTasks,
   createTask,
   deleteTask,
   loadTasks,
   updateTask,
 } from './store/tasks/tasks.actions';
 import { Store } from '@ngrx/store';
-import { checkAuthFromCookie, loginAction, logout, registerAction } from './store/auth/auth.actions';
+import {
+  checkAuthFromCookie,
+  loginAction,
+  logout,
+  registerAction,
+} from './store/auth/auth.actions';
 import { CookieService } from 'ngx-cookie-service';
 import { HeaderComponent } from './components/header/header.component';
 
@@ -43,8 +49,7 @@ export class AppComponent implements OnInit {
   // Authentication-related properties
   email: string = '';
   password: string = '';
-  isAuthenticated = false;
-  isValidUser = false;
+  isValidUser: boolean = false;
 
   // Dialog-related properties
   visible: boolean = false;
@@ -80,18 +85,36 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeAuthState();
-    this.store.dispatch(loadTasks());
+    
+    const authToken = this.cookieService.get('authToken');
+    this.isValidUser = !!authToken;
+  
+    if (this.isValidUser) {
+      this.store.dispatch(loadTasks());
+    }
   }
+  
+
+  // ngOnInit(): void {
+  //   this.initializeAuthState();
+  //   this.store.dispatch(loadTasks());
+
+  //   const authToken = this.cookieService.get('authToken');
+  //   if (authToken) {
+  //     this.isValidUser = true;
+  //   } else {
+  //     this.isValidUser = false;
+  //   }
+  // }
 
   // Authentication methods
   initializeAuthState() {
     const token = this.cookieService.get('authToken');
-    this.isAuthenticated = !!token;
-
-    this.store.select((state: any) => state.auth).subscribe((authState) => {
-      this.isValidUser = authState.isValidUser;
-      console.log('Latest auth state:', authState?.isAuthenticated);
-    });
+    this.store
+      .select((state: any) => state.auth)
+      .subscribe((authState) => {
+        this.isValidUser = authState?.isValidUser;
+      });
 
     this.store.dispatch(checkAuthFromCookie());
   }
@@ -104,14 +127,14 @@ export class AppComponent implements OnInit {
     this.store.dispatch(
       loginAction({ user: { email: this.email, password: this.password } })
     );
-    // this.store.dispatch(loadTasks());
     this.loginVisible = false;
   }
 
   logout() {
     this.cookieService.delete('authToken');
     this.store.dispatch(logout());
-    this.isAuthenticated = false;
+    this.store.dispatch(clearTasks()); 
+    // this.store.dispatch(loadTasks());
   }
 
   // Task-related methods
@@ -119,6 +142,12 @@ export class AppComponent implements OnInit {
     this.resetForm();
     this.dialogTitle = arg === 'add' ? 'Add New Task' : 'Edit Task';
     this.btnText = arg === 'add' ? 'Save' : 'Update';
+    if (arg === 'add') {
+      this.task.label = this.labels.find((label) => label.code === 'todo') || {
+        name: '',
+        code: '',
+      };
+    }
     this.visible = true;
   }
 

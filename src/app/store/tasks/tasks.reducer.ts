@@ -47,5 +47,6 @@ export const tasksReducer = createReducer(
   on(tasksActions.createTaskFailure, (state, { error }) => ({
     ...state,
     error,
-  }))
+  })),
+  on(tasksActions.clearTasks, () => initialState)
 );

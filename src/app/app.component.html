@@ -9,6 +9,7 @@
     type="button"
     label="Add New Task"
     icon="pi pi-plus"
+    *ngIf="isValidUser"
     (click)="showDialog('add')"
   ></button>
 
@@ -16,6 +17,7 @@
   <p-button
     label="Sign Up"
     icon="pi pi-user-plus"
+    *ngIf="!isValidUser"
     (onClick)="showSignupDialog()"
   ></p-button>
 

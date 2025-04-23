@@ -101,4 +101,11 @@ export class TasksEffects {
       map(() => TasksActions.loadTasks())
     )
   );
+
+  loadTasksAfterLogout$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.logoutSuccess),
+      map(() => TasksActions.loadTasks())
+    )
+  );
 }
