@@ -22,7 +22,11 @@ export class AddEditDialogComponent {
   ];
 
   @Input() visible: boolean = false;
-  @Input() task: any = { title: '', description: '', label: { name: '', code: '' } };
+  @Input() task: any = {
+    title: '',
+    description: '',
+    label: { name: '', code: '' },
+  };
   @Input() taskId: string = '';
   @Input() dialogTitle: string = '';
   @Input() btnText: string = 'Save';
@@ -36,7 +40,7 @@ export class AddEditDialogComponent {
   }
 
   closeDialog() {
-    this.visibleChange.emit(false); 
+    this.visibleChange.emit(false);
     this.resetForm();
   }
 
@@ -48,10 +52,16 @@ export class AddEditDialogComponent {
       this.taskId = task.id;
       this.task = {
         ...task,
-        label: this.labels.find((label) => label.code === task.status) || { name: '', code: '' },
+        label: this.labels.find((label) => label.code === task.status) || {
+          name: '',
+          code: '',
+        },
       };
     } else if (arg === 'add') {
-      this.task.label = this.labels.find((label) => label.code === 'todo') || { name: '', code: '' };
+      this.task.label = this.labels.find((label) => label.code === 'todo') || {
+        name: '',
+        code: '',
+      };
     }
 
     this.visible = true;

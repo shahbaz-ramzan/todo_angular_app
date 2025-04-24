@@ -5,11 +5,7 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ConfirmationService } from 'primeng/api';
 import { Store } from '@ngrx/store';
-import {
-  createTask,
-  deleteTask,
-  updateTask,
-} from '../../store/tasks/tasks.actions';
+import { deleteTask } from '../../store/tasks/tasks.actions';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { AddEditDialogComponent } from '../add-edit-dialog/add-edit-dialog.component';
 import { UserActionsComponent } from '../user-actions/user-actions.component';
@@ -30,7 +26,7 @@ import { CookieService } from 'ngx-cookie-service';
   providers: [ConfirmationService],
   templateUrl: './list.component.html',
   styleUrl: './list.component.css',
-}) 
+})
 export class ListComponent implements OnInit {
   store = inject(Store);
   // confirmationService = inject(ConfirmationService);
@@ -87,20 +83,19 @@ export class ListComponent implements OnInit {
       };
     }
     this.visible = true;
-    
-}
+  }
   editTask(task: any) {
-          this.showDialog('edit');
-      const labelObj = this.labels.find(
-        (label) => label.code === task.status
-      ) || { name: '', code: '' };
-      this.taskId = task._id;
-      this.task = {
-        title: task.title,
-        description: task.description,
-        label: labelObj,
-      };
-      }
+    this.showDialog('edit');
+    const labelObj = this.labels.find(
+      (label) => label.code === task.status
+    ) || { name: '', code: '' };
+    this.taskId = task._id;
+    this.task = {
+      title: task.title,
+      description: task.description,
+      label: labelObj,
+    };
+  }
 
   getSeverity(
     status: string
@@ -116,5 +111,4 @@ export class ListComponent implements OnInit {
         return 'secondary';
     }
   }
-  
 }

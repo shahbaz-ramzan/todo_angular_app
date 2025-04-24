@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { CookieService } from 'ngx-cookie-service';
 import { ButtonModule } from 'primeng/button';
@@ -14,7 +14,15 @@ import { LoginComponent } from '../login/login.component';
 @Component({
   selector: 'app-user-actions',
   standalone: true,
-  imports: [CommonModule, ButtonModule, DropdownModule, DialogModule,AddEditDialogComponent,SignUpComponent,LoginComponent],
+  imports: [
+    CommonModule,
+    ButtonModule,
+    DropdownModule,
+    DialogModule,
+    AddEditDialogComponent,
+    SignUpComponent,
+    LoginComponent,
+  ],
   templateUrl: './user-actions.component.html',
   styleUrl: './user-actions.component.css',
 })
@@ -25,11 +33,10 @@ export class UserActionsComponent {
   taskId: string = '';
   visible: boolean = false;
   loginVisible: boolean = false;
-  signupVisible:boolean = false;
-  
+  signupVisible: boolean = false;
 
   store = inject(Store);
-  
+
   // isValidUser: boolean = false;
   labels = [
     { name: 'To Do', code: 'todo' },
@@ -68,7 +75,8 @@ export class UserActionsComponent {
   }
 
   showSignupDialog() {
-    if (!this.signupVisible) { // Ensure the dialog is not already open
+    if (!this.signupVisible) {
+      // Ensure the dialog is not already open
       this.signupVisible = true;
     }
   }
@@ -108,6 +116,4 @@ export class UserActionsComponent {
 
     this.store.dispatch(checkAuthFromCookie());
   }
-
-  
 }
