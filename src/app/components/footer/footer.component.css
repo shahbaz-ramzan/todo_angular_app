@@ -1,0 +1,10 @@
+.app-footer {
+  background-color: #007bff;
+  color: white;
+  text-align: center;
+  padding: 0.25rem; /* Reduced padding to decrease height */
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  font-size: 0.9rem;
+}

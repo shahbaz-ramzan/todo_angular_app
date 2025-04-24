@@ -5,22 +5,4 @@
     justify-content: center; /* Center align buttons */
   }
   
-  .dialog-style {
-    width: 35rem; /* Default width for dialogs */
-    padding: 1rem 1.5rem; /* Consistent padding */
-    overflow: visible; /* Ensure content is visible */
-  }
-  
-  .dialog-header {
-    font-size: 1.25rem; /* Larger font for dialog headers */
-    font-weight: bold;
-    margin-bottom: 1rem;
-  }
-  
-  .dialog-footer {
-    display: flex;
-    justify-content: flex-end; /* Align buttons to the right */
-    gap: 1.5rem; /* Increased space between buttons */
-    margin-top: 1.5rem; /* Add space above the button group */
-  }
   

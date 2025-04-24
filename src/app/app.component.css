@@ -1,25 +1,25 @@
-.button-container {
+.app-container {
+  padding: 0;
+  margin: 0;
   display: flex;
-  gap: 1rem; /* Space between buttons */
-  margin-bottom: 1rem; /* Space below the button container */
-  justify-content: center; /* Center align buttons */
+  flex-direction: column;
+  min-height: 100vh; /* Ensure the container takes full height */
+  background-color: #f0f0f0; /* Light background color */
+  padding: 1rem; /* Add some padding */
+  box-sizing: border-box; /* Include padding in height/width calculations */
+  font-family: Arial, sans-serif; /* Set a default font */
+  color: #333; /* Default text color */
+  font-size: 1rem; /* Default font size */
 }
 
-.dialog-style {
-  width: 35rem; /* Default width for dialogs */
-  padding: 1rem 1.5rem; /* Consistent padding */
-  overflow: visible; /* Ensure content is visible */
+.table-container {
+  padding-bottom: 3rem; /* Add padding to prevent overlap with the fixed footer */
 }
 
-.dialog-header {
-  font-size: 1.25rem; /* Larger font for dialog headers */
-  font-weight: bold;
-  margin-bottom: 1rem;
+.app-header {
+  margin-bottom: 1rem; /* Add spacing below the header */
 }
 
-.dialog-footer {
-  display: flex;
-  justify-content: flex-end; /* Align buttons to the right */
-  gap: 1.5rem; /* Increased space between buttons */
-  margin-top: 1.5rem; /* Add space above the button group */
+.app-footer {
+  margin-top: 1rem; /* Add spacing above the footer */
 }

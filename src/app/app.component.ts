@@ -18,6 +18,8 @@ import {
 import { CookieService } from 'ngx-cookie-service';
 import { HeaderComponent } from './components/header/header.component';
 import { ListComponent } from './components/list/list.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
 
 @Component({
   selector: 'app-root',
@@ -34,6 +36,8 @@ import { ListComponent } from './components/list/list.component';
     ConfirmDialogModule,
     HeaderComponent,
     ListComponent,
+    FooterComponent,
+    NavbarComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
@@ -41,7 +45,6 @@ import { ListComponent } from './components/list/list.component';
 export class AppComponent implements OnInit {
   isValidUser: boolean = false;
 
-  // Store and observables
   store = inject(Store);
   tasks$ = this.store.select((state: any) => state.tasks.tasks) || [];
   user$ = this.store.select((state: any) => state.user) || [];
@@ -59,7 +62,6 @@ export class AppComponent implements OnInit {
     }
   }
 
-  // Authentication methods
   initializeAuthState() {
     const token = this.cookieService.get('authToken');
     this.store

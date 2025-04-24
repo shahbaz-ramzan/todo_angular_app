@@ -11,7 +11,7 @@ import { provideEffects } from '@ngrx/effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideStore } from '@ngrx/store';
 import { TasksEffects } from './store/tasks/tasks.effects';
-import { tasksReducer } from './store/tasks/tasks.reducer'; // ✅ import reducer
+import { tasksReducer } from './store/tasks/tasks.reducer';
 import { AuthEffects } from './store/auth/auth.effects';
 import { authReducer } from './store/auth/auth.reducer';
 
@@ -19,12 +19,9 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideAnimations(),
-    provideEffects([TasksEffects,AuthEffects]),
+    provideEffects([TasksEffects, AuthEffects]),
     provideStoreDevtools(),
-    provideStore({ tasks: tasksReducer,
-      auth: authReducer
-
-     }),
+    provideStore({ tasks: tasksReducer, auth: authReducer }),
     provideHttpClient(),
   ],
 };
