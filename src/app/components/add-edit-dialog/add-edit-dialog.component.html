@@ -2,59 +2,70 @@
   header="{{ dialogTitle }}"
   [(visible)]="visible"
   [modal]="true"
-  [styleClass]="'dialog-style'"
+  [style]="{ width: '450px' }"
   [draggable]="false"
+  [closable]="true"
+  [contentStyle]="{ padding: '2rem' }"
+  styleClass="task-dialog-style"
   (onHide)="closeDialog()"
 >
-  <div class="p-fluid">
-    <div class="mb-4">
-      <label for="title" class="font-semibold block mb-1">Task Title: </label>
-      <input
-        pInputText
-        id="title"
-        [(ngModel)]="task.title"
-        style="width: 100%; height: 2rem"
-        autocomplete="off"
-      />
-      <small id="username-help"> Enter task title. </small>
-    </div>
+  <div class="task-container">
+    <!-- <h2 class="task-title">{{ dialogTitle }}</h2> -->
+    <div class="p-fluid">
+      <!-- Title -->
+      <div class="mb-3">
+        <label for="title" class="task-label">Task Title</label>
+        <input
+          pInputText
+          id="title"
+          [(ngModel)]="task.title"
+          placeholder="Enter task title"
+          class="task-input"
+          autocomplete="off"
+        />
+      </div>
 
-    <div class="mb-4">
-      <label for="description" class="font-semibold block mb-1"
-        >Description:
-      </label>
-      <input
-        pInputText
-        id="description"
-        [(ngModel)]="task.description"
-        style="width: 100%; height: 2rem"
-        autocomplete="off"
-      />
-      <small id="username-help"> Enter task description. </small>
-    </div>
+      <!-- Description -->
+      <div class="mb-3">
+        <label for="description" class="task-label">Description</label>
+        <input
+          pInputText
+          id="description"
+          [(ngModel)]="task.description"
+          placeholder="Enter task description"
+          class="task-input"
+          autocomplete="off"
+        />
+      </div>
 
-    <div class="mb-4">
-      <label for="label" class="font-semibold block mb-2"
-        >Select Status:
-      </label>
-      <p-dropdown
-        id="label"
-        [(ngModel)]="task.label"
-        [options]="labels"
-        optionLabel="name"
-        placeholder="Select a label"
-        class="w-full"
-        [appendTo]="'body'"
-      ></p-dropdown>
-    </div>
+      <!-- Status Dropdown -->
+      <div class="mb-3">
+        <label for="label" class="task-label">Select Status</label>
+        <p-dropdown
+          id="label"
+          [(ngModel)]="task.label"
+          [options]="labels"
+          optionLabel="name"
+          placeholder="Select a label"
+          class="w-full"
+          [appendTo]="'body'"
+        ></p-dropdown>
+      </div>
 
-    <div class="dialog-footer">
-      <p-button
-        label="Cancel"
-        severity="secondary"
-        (onClick)="closeDialog()"
-      ></p-button>
-      <p-button label="{{ btnText }}" (onClick)="addTask()"></p-button>
+      <!-- Buttons -->
+      <div class="task-footer">
+        <p-button
+          label="Cancel"
+          severity="secondary"
+          class="task-cancel-btn"
+          (onClick)="closeDialog()"
+        ></p-button>
+        <p-button
+          label="{{ btnText }}"
+          class="task-submit-btn"
+          (onClick)="addTask()"
+        ></p-button>
+      </div>
     </div>
   </div>
 </p-dialog>

@@ -1,4 +1,3 @@
-
 <app-add-edit-dialog
 [(visible)]="visible"
 [task]="task"
@@ -13,8 +12,14 @@
 [isValidUser]="isValidUser"
 ></app-user-actions>
 
+<div class="table-container" style="position: relative; min-height: 200px;">
+  <!-- Conditional message for empty tasks -->
+  <div *ngIf="(tasks$ | async)?.length === 0" class="no-data-message">
+    No tasks found.
+  </div>
 
-<p-table [value]="tasks$ | async" [tableStyle]="{ 'min-width': '50rem' }">
+  <!-- Table of Products -->
+  <p-table *ngIf="(tasks$ | async)?.length > 0" [value]="tasks$ | async" [tableStyle]="{ 'min-width': '50rem' }">
     <ng-template pTemplate="header">
       <tr>
         <th>Title</th>
@@ -58,3 +63,4 @@
       </tr>
     </ng-template>
   </p-table>
+</div>

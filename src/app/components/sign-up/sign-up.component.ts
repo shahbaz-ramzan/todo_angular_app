@@ -29,16 +29,11 @@ export class SignUpComponent {
   constructor() {}
 
   closeDialog() {
-    this.signupVisible = false;
     this.signupVisibleChange.emit(false);
   }
 
-  showSignupDialog() {
-    this.signupVisible = true;
-  }
 
   closeSignupDialog() {
-    this.signupVisible = false;
     this.signupData = {
       username: '',
       email: '',
@@ -65,7 +60,6 @@ export class SignUpComponent {
       return;
     }
     this.store.dispatch(registerAction({ user: this.signupData }));
-    this.signupVisible = false;
     this.signupVisibleChange.emit(false);
   }
 }

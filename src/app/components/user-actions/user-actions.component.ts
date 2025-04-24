@@ -25,7 +25,7 @@ export class UserActionsComponent {
   taskId: string = '';
   visible: boolean = false;
   loginVisible: boolean = false;
-  signupVisible = false;
+  signupVisible:boolean = false;
   
 
   store = inject(Store);
@@ -40,7 +40,7 @@ export class UserActionsComponent {
   @Input() isValidUser: boolean = false;
   // @Input() visible: boolean = false;
 
-  @Output() visibleChange = new EventEmitter<boolean>();
+  // @Output() visibleChange = new EventEmitter<boolean>();
 
   constructor(private cookieService: CookieService) {}
 
@@ -68,19 +68,33 @@ export class UserActionsComponent {
   }
 
   showSignupDialog() {
-    this.signupVisible = true;
+    if (!this.signupVisible) { // Ensure the dialog is not already open
+      this.signupVisible = true;
+    }
   }
 
   showLoginDialog() {
     this.loginVisible = true;
   }
+
+  signupVisibleChange() {
+    this.signupVisible = false; // Close the dialog
+    this.resetForm(); // Reset the form data
+  }
+  loginVisibleChange() {
+    this.loginVisible = false; // Close the dialog
+    this.resetForm(); // Reset the form data
+  }
+
   logout() {
     this.cookieService.delete('authToken');
     this.store.dispatch(logout());
     this.store.dispatch(clearTasks());
   }
+
   closeDialog() {
-    this.visibleChange.emit(false);
+    // this.visibleChange.emit(false);
+    this.signupVisible = false; // Reset the signupVisible property
     this.resetForm();
   }
 
