@@ -1,0 +1,66 @@
+<app-add-edit-dialog
+[(visible)]="visible"
+[task]="task"
+[btnText]="btnText"
+[taskId]="taskId"
+[dialogTitle]="dialogTitle"
+></app-add-edit-dialog>
+
+<p-confirmDialog></p-confirmDialog>
+
+<app-user-actions
+[isValidUser]="isValidUser"
+></app-user-actions>
+
+<div class="table-container" style="position: relative; min-height: 200px;">
+  <!-- Conditional message for empty tasks -->
+  <div *ngIf="(tasks$ | async)?.length === 0" class="no-data-message">
+    No tasks found.
+  </div>
+
+  <!-- Table of Products -->
+  <p-table *ngIf="(tasks$ | async)?.length > 0" [value]="tasks$ | async" [tableStyle]="{ 'min-width': '50rem' }">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Created At</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-task>
+      <tr>
+        <td>{{ task.title }}</td>
+        <td>{{ task.description }}</td>
+        <td>{{ task.createdAt | date : "medium" }}</td>
+        <td>
+          <p-tag
+            [value]="task.status"
+            [severity]="getSeverity(task.status)"
+          ></p-tag>
+        </td>
+        <td>
+          <button
+            pButton
+            icon="pi pi-pencil"
+            class="p-button-sm p-button-rounded p-button-text"
+            (click)="editTask(task)"
+            tooltip="Edit"
+          >
+            Edit
+          </button>
+          <button
+            pButton
+            icon="pi pi-trash"
+            class="p-button-sm p-button-rounded p-button-text p-button-danger"
+            (click)="confirmDelete(task?._id)"
+            tooltip="Delete"
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

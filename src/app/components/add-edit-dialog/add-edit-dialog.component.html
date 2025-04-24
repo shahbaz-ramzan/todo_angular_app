@@ -1,0 +1,71 @@
+<p-dialog
+  header="{{ dialogTitle }}"
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '450px' }"
+  [draggable]="false"
+  [closable]="true"
+  [contentStyle]="{ padding: '2rem' }"
+  styleClass="task-dialog-style"
+  (onHide)="closeDialog()"
+>
+  <div class="task-container">
+    <!-- <h2 class="task-title">{{ dialogTitle }}</h2> -->
+    <div class="p-fluid">
+      <!-- Title -->
+      <div class="mb-3">
+        <label for="title" class="task-label">Task Title</label>
+        <input
+          pInputText
+          id="title"
+          [(ngModel)]="task.title"
+          placeholder="Enter task title"
+          class="task-input"
+          autocomplete="off"
+        />
+      </div>
+
+      <!-- Description -->
+      <div class="mb-3">
+        <label for="description" class="task-label">Description</label>
+        <input
+          pInputText
+          id="description"
+          [(ngModel)]="task.description"
+          placeholder="Enter task description"
+          class="task-input"
+          autocomplete="off"
+        />
+      </div>
+
+      <!-- Status Dropdown -->
+      <div class="mb-3">
+        <label for="label" class="task-label">Select Status</label>
+        <p-dropdown
+          id="label"
+          [(ngModel)]="task.label"
+          [options]="labels"
+          optionLabel="name"
+          placeholder="Select a label"
+          class="w-full"
+          [appendTo]="'body'"
+        ></p-dropdown>
+      </div>
+
+      <!-- Buttons -->
+      <div class="task-footer">
+        <p-button
+          label="Cancel"
+          severity="secondary"
+          class="task-cancel-btn"
+          (onClick)="closeDialog()"
+        ></p-button>
+        <p-button
+          label="{{ btnText }}"
+          class="task-submit-btn"
+          (onClick)="addTask()"
+        ></p-button>
+      </div>
+    </div>
+  </div>
+</p-dialog>

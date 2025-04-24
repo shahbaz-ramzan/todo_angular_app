@@ -1,0 +1,57 @@
+<p-dialog
+  [(visible)]="loginVisible"
+  [modal]="true"
+  header="Login"
+  [style]="{ width: '400px' }"
+  [draggable]="false"
+  [closable]="true"
+  [contentStyle]="{ padding: '2rem' }"
+  (onHide)="closeLoginDialog()"
+>
+  <div class="login-container">
+    <h2 class="login-title">Welcome Back</h2>
+    <div class="p-fluid">
+      <!-- Email -->
+      <div class="mb-3">
+        <label for="email" class="login-label">Email</label>
+        <input
+          pInputText
+          id="email"
+          [(ngModel)]="email"
+          placeholder="Enter your email"
+          type="email"
+          class="login-input"
+        />
+      </div>
+
+      <!-- Password -->
+      <div class="mb-3">
+        <label for="password" class="login-label">Password</label>
+        <input
+          pInputText
+          id="password"
+          [(ngModel)]="password"
+          type="password"
+          placeholder="Enter your password"
+          class="login-input"
+        />
+      </div>
+
+      <!-- Buttons -->
+      <div class="login-footer">
+        <p-button
+          label="Cancel"
+          severity="secondary"
+          class="login-cancel-btn"
+          (onClick)="closeLoginDialog()"
+        ></p-button>
+        <p-button
+          label="Login"
+          class="login-submit-btn"
+          (onClick)="login()"
+          [disabled]="!email || !password"
+        ></p-button>
+      </div>
+    </div>
+  </div>
+</p-dialog>

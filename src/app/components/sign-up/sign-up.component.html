@@ -1,0 +1,83 @@
+<p-dialog
+  [(visible)]="signupVisible"
+  [modal]="true"
+  header="Sign Up"
+  [style]="{ width: '400px' }"
+  [draggable]="false"
+  [closable]="true"
+  [contentStyle]="{ padding: '2rem' }"
+  (onHide)="closeSignupDialog()"
+  
+>
+  <div class="signup-container">
+    <h2 class="signup-title">Create an Account</h2>
+    <div class="p-fluid">
+      <!-- Username -->
+      <div class="mb-3">
+        <label for="username" class="signup-label">Username</label>
+        <input
+          pInputText
+          id="username"
+          [(ngModel)]="signupData.username"
+          placeholder="Enter your username"
+          class="signup-input"
+        />
+      </div>
+
+      <!-- Email -->
+      <div class="mb-3">
+        <label for="email" class="signup-label">Email</label>
+        <input
+          pInputText
+          id="email"
+          [(ngModel)]="signupData.email"
+          placeholder="Enter your email"
+          type="email"
+          class="signup-input"
+        />
+      </div>
+
+      <!-- Password -->
+      <div class="mb-3">
+        <label for="password" class="signup-label">Password</label>
+        <input
+          pInputText
+          id="password"
+          [(ngModel)]="signupData.password"
+          placeholder="Enter your password"
+          type="password"
+          class="signup-input"
+        />
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="mb-3">
+        <label for="confirmPassword" class="signup-label">Confirm Password</label>
+        <input
+          pInputText
+          id="confirmPassword"
+          [(ngModel)]="signupData.confirmPassword"
+          placeholder="Confirm your password"
+          type="password"
+          class="signup-input"
+        />
+      </div>
+
+      <!-- Buttons -->
+      <div class="signup-footer">
+        <p-button
+          label="Cancel"
+          severity="secondary"
+          class="signup-cancel-btn"
+          (onClick)="closeSignupDialog()"
+        ></p-button>
+        <p-button
+          label="Sign Up"
+          class="signup-submit-btn"
+          (onClick)="signup()"
+          [disabled]="!isSignupFormValid()"
+        ></p-button>
+      </div>
+    </div>
+  </div>
+</p-dialog>
