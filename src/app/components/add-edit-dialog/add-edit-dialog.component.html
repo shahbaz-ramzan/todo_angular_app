@@ -1,0 +1,60 @@
+<p-dialog
+  header="{{ dialogTitle }}"
+  [(visible)]="visible"
+  [modal]="true"
+  [styleClass]="'dialog-style'"
+  [draggable]="false"
+  (onHide)="closeDialog()"
+>
+  <div class="p-fluid">
+    <div class="mb-4">
+      <label for="title" class="font-semibold block mb-1">Task Title: </label>
+      <input
+        pInputText
+        id="title"
+        [(ngModel)]="task.title"
+        style="width: 100%; height: 2rem"
+        autocomplete="off"
+      />
+      <small id="username-help"> Enter task title. </small>
+    </div>
+
+    <div class="mb-4">
+      <label for="description" class="font-semibold block mb-1"
+        >Description:
+      </label>
+      <input
+        pInputText
+        id="description"
+        [(ngModel)]="task.description"
+        style="width: 100%; height: 2rem"
+        autocomplete="off"
+      />
+      <small id="username-help"> Enter task description. </small>
+    </div>
+
+    <div class="mb-4">
+      <label for="label" class="font-semibold block mb-2"
+        >Select Status:
+      </label>
+      <p-dropdown
+        id="label"
+        [(ngModel)]="task.label"
+        [options]="labels"
+        optionLabel="name"
+        placeholder="Select a label"
+        class="w-full"
+        [appendTo]="'body'"
+      ></p-dropdown>
+    </div>
+
+    <div class="dialog-footer">
+      <p-button
+        label="Cancel"
+        severity="secondary"
+        (onClick)="closeDialog()"
+      ></p-button>
+      <p-button label="{{ btnText }}" (onClick)="addTask()"></p-button>
+    </div>
+  </div>
+</p-dialog>

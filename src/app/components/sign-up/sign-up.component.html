@@ -1,0 +1,72 @@
+
+<p-dialog 
+[(visible)]="signupVisible" 
+[modal]="true"
+[styleClass]="'dialog-style'"
+header="Create an Account"
+(onHide)="closeDialog()"
+>
+<div class="p-fluid">
+  <!-- <div class="dialog-header">Sign Up</div> -->
+  <!-- Username -->
+  <div class="mb-3">
+    <label for="username">Username</label>
+    <input 
+      pInputText 
+      id="username" 
+      [(ngModel)]="signupData.username" 
+      placeholder="Enter username"
+    />
+  </div>
+
+  <!-- Email -->
+  <div class="mb-3">
+    <label for="email">Email</label>
+    <input 
+      pInputText 
+      id="email" 
+      [(ngModel)]="signupData.email" 
+      placeholder="Enter email" 
+      type="email"
+    />
+  </div>
+
+  <!-- Password -->
+  <div class="mb-3">
+    <label for="password">Password</label>
+    <input 
+      pInputText 
+      id="password" 
+      [(ngModel)]="signupData.password" 
+      placeholder="Enter password" 
+      type="password"
+    />
+  </div>
+
+  <!-- Confirm Password -->
+  <div class="mb-3">
+    <label for="confirmPassword">Confirm Password</label>
+    <input 
+      pInputText 
+      id="confirmPassword" 
+      [(ngModel)]="signupData.confirmPassword" 
+      placeholder="Confirm password" 
+      type="password"
+    />
+  </div>
+
+  <!-- Buttons -->
+  <div class="dialog-footer">
+    <p-button 
+      label="Cancel" 
+      severity="secondary" 
+      (onClick)="signupVisible = false"
+    ></p-button>
+    <p-button 
+      label="Sign Up" 
+      (onClick)="signup()" 
+      [disabled]="!isSignupFormValid()"
+    ></p-button>
+  </div>
+</div>
+</p-dialog>

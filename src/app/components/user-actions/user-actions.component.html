@@ -1,0 +1,52 @@
+<div class="button-container">
+  <!-- Add Task Button -->
+  <button
+    pButton
+    type="button"
+    label="Add New Task"
+    icon="pi pi-plus"
+    *ngIf="isValidUser"
+    (click)="showDialog('add')"
+  ></button>
+
+  <!-- Sign Up Button -->
+  <p-button
+    label="Sign Up"
+    icon="pi pi-user-plus"
+    *ngIf="!isValidUser"
+    (onClick)="showSignupDialog()"
+  ></p-button>
+
+  <!-- Login Button -->
+  <p-button
+    (onClick)="showLoginDialog()"
+    icon="pi pi-user"
+    label="Login"
+    *ngIf="!isValidUser"
+  ></p-button>
+
+  <!-- Logout Button -->
+  <p-button
+    label="Logout"
+    icon="pi pi-sign-out"
+    class="p-button-danger"
+    (onClick)="logout()"
+    *ngIf="isValidUser"
+  ></p-button>
+</div>
+
+<app-add-edit-dialog
+  [(visible)]="visible"
+  [task]="task"
+  [btnText]="btnText"
+  [taskId]="taskId"
+  [dialogTitle]="dialogTitle"
+></app-add-edit-dialog>
+
+<app-sign-up 
+  [(signupVisible)]="signupVisible"
+  ></app-sign-up>
+
+  <app-login
+  [(loginVisible)]="loginVisible"
+  ></app-login>
