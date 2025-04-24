@@ -64,6 +64,7 @@
           label="{{ btnText }}"
           class="task-submit-btn"
           (onClick)="addTask()"
+          [disabled]="!task.title || !task.description || !task.label?.code"
         ></p-button>
       </div>
     </div>
