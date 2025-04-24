@@ -32,7 +32,6 @@ export class SignUpComponent {
     this.signupVisibleChange.emit(false);
   }
 
-
   closeSignupDialog() {
     this.signupData = {
       username: '',
